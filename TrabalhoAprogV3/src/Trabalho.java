@@ -182,8 +182,8 @@ public class Trabalho {
     }
 
     // b)
-    // Visualizar o MT no ecrã, com os valores das colunas alinhados à direita
 
+    // Visualizar o MT no ecrã, com os valores das colunas alinhados à direita
 
     public static void showMT (int[][] arrMT, int rows, int columns) {
         for (int i = 0; i < rows; i++) {
@@ -339,6 +339,9 @@ public class Trabalho {
      /*
         Visualizar quantos ºC teria de subir a temperatura, para a totalidade do terreno ficar no nível de alerta
         CATASTROPHIC;
+
+        Para isso, vamos percurrer a novaMT para encontrar a menor temperatura, porque se a menor temperatura está
+        no nivel castastrophic todas as outras temperaturas também estão.
      */
 
     public static int findLowestTemperature (int[][] novaMT, int rows, int columns) {
@@ -352,6 +355,13 @@ public class Trabalho {
         }
         return lowestTemperature;
     }
+
+    /*
+        Uma vez encontrada a menor temperatura, substraimos o valor desta a 40 é que o valor minimo
+        da temperatura para ser catastrophic, e obtemos o valor para que a totalidade do mapa fique
+        no nivel de alerta Catastrophic.
+     */
+
 
     public static void showTemperatureToAllCatastrophic (int lowestTemperature) {
         int temperatureToCatastrophic;
@@ -394,12 +404,22 @@ public class Trabalho {
 
     // h)
 
+    /*
+        Criamos uma matriz, nortSulMA, para comparar com a ja existente.
+     */
+
     public static String[][] makeNorteSulMA (String[][] newNewMA,int rows, int columns)  {
         String[][] norteSulMA = new String[rows][columns];
 
         for (int i = 0; i < rows ; i++) {
             for (int j = 0; j < columns ; j++) {
                 norteSulMA[i][j] = newNewMA[i][j];
+
+                /*
+                    Sempre que na fila anterior da mesma coluna da matriz for
+                    igual a C, a nova matriz na fila a seguir, mas na mesma coluna
+                    passa a ser C.
+                 */
 
                 if (i > 0 && newNewMA[i-1][j].equals("C")) {
                     norteSulMA[i][j] = "C";
@@ -418,12 +438,14 @@ public class Trabalho {
         // Primeiro vamos verificar se existe fogos através do módulo "checkIfIsOnFire"
 
         if(checkIfIsOnFire(arrMT, rows, columns)){
+
                 // Como já vimos que existem fogos, vamos então observar a quantidade de fogos
                 // existentes num quadrado 3x3 (que é o alcance do helicóptero)
 
                 // Como não adianta começar nem acabar na primeira ou última, linha ou coluna,
                 // pois seria gastar água em vão, vamos começar os nossos ciclos uma linha e coluna
                 // à frente e acabar uma atrás.
+
                 for (int i = 1; i < (rows - 1); i++) {
                     for (int j = 1; j < (columns - 1); j++) {
                         position[0] = i;
@@ -431,6 +453,7 @@ public class Trabalho {
 
                             // Como precisámos de saber o local com maior quantidade de fogos
                             // vamos criar um módulo para fazer isso
+
                             fireCount = countFireSpots(arrMT, position);
 
                             if (fireCount > bigger) {
@@ -465,6 +488,7 @@ public class Trabalho {
                 // tem que estar acima de 50ºC, vamos verficar se em cada um dos pontos
                 // do quadrado a temperatura é maior ou não que 50ºC, se for o contador de
                 // fogos incrementa.
+
                 if(arrMT[row][column] > FIRE) {
                     counter++;
                 }
@@ -488,9 +512,22 @@ public class Trabalho {
 
     // j)
 
+
+
     public static int lookForSafeColumn (String[][] arrMA, int rows, int columns) {
-        int safestColumn = -1;
         boolean notSafe = false;
+
+        /*
+            Começamos o cliclo for com as colunas porque queremos
+            analisar as colunas. Além disso, começamos com o valor
+            maximo da coluna porque queremos a mais a este.
+
+            Se encontrarmos na coluna um C, o boolean passa a true
+            e da return do número da coluna,
+
+            O return do -1 é para o caso de não haver nehuma
+            coluna segura.
+         */
 
         for (int i = (columns - 1); i >= 0; i--) {
             for (int j = 0; j < rows; j++) {
@@ -509,12 +546,19 @@ public class Trabalho {
         return -1;
     }
 
+    /*
+        Se o return do módulo anterior for -1, este modulo
+        ira dar print de "NONE"
+
+        Se não for -1, ira dar print da coluna.
+     */
+
     public static void showSafestColumn(int safestColumn){
         if (safestColumn != -1) {
             System.out.println( "safe column = " + "(" + safestColumn + ")");
 
         } else {
-            System.out.println("safe column =NONE" );
+            System.out.println("safe column = NONE" );
 
         }
     }
