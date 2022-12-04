@@ -512,13 +512,11 @@ public class Trabalho {
 
     // j)
 
-
-
     public static int lookForSafeColumn (String[][] arrMA, int rows, int columns) {
         boolean notSafe = false;
 
         /*
-            Começamos o cliclo for com as colunas porque queremos
+            Começamos o ciclo for com as colunas porque queremos
             analisar as colunas. Além disso, começamos com o valor
             maximo da coluna porque queremos a mais a este.
 
